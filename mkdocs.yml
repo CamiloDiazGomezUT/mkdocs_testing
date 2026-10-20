@@ -48,6 +48,9 @@ hooks:
 
 plugins:
   - search
+  # The release zip is opened from disk (file://): link to page.html files and bundle search
+  - offline:
+      enabled: !ENV [OFFLINE, false]
   - gen-files:
       scripts:
         - docs/scripts/gen_ref_pages.py
