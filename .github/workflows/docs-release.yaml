@@ -1,0 +1,57 @@
+name: Release documentation
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing release tag to build and attach the documentation for, e.g. v1.2.0"
+        required: true
+        type: string
+
+jobs:
+  docs:
+    name: Build and attach documentation
+
+    runs-on: ubuntu-24.04
+
+    permissions:
+      contents: write
+
+    env:
+      TAG: ${{ github.event.release.tag_name || inputs.tag }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7.0.1
+        with:
+          ref: ${{ env.TAG }}
+
+      - name: Install Python
+        uses: actions/setup-python@v7.0.0
+        with:
+          python-version-file: .python-version
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v10.2.0
+
+      - name: Install the project
+        run: |
+          uv venv
+          source .venv/bin/activate
+          uv sync --extra docs
+
+      - name: Build documentation
+        env:
+          DISABLE_MKDOCS_2_WARNING: "true"
+          DOCS_REF: ${{ env.TAG }}
+        run: |
+          uv run mkdocs build --strict
+
+      - name: Attach documentation to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          (cd site && zip -qr "../docs-${TAG}.zip" .)
+          gh release upload "${TAG}" "docs-${TAG}.zip" --clobber

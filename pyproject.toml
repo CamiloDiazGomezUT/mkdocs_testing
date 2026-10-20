@@ -1,0 +1,51 @@
+[project]
+name = "citystats"
+version = "0.1.0"
+description = "Sandbox package to test MkDocs documentation attached to GitHub releases."
+readme = "README.md"
+authors = [
+    { name = "Camilo Andrés Díaz Gómez", email = "camilo.diaz@ultratendency.com" },
+]
+requires-python = ">=3.12,<3.13"
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+  "pytest==9.1.1",
+  "pytest-cov==7.1.0",
+  "ruff==0.16.10",
+]
+docs = [
+  "mkdocs==1.6.1",
+  "mkdocs-gen-files==0.6.1",
+  "mkdocs-literate-nav==0.6.3",
+  "mkdocs-material==9.7.7",
+  "mkdocs-section-index==0.3.12",
+  "mkdocstrings[python]==1.0.7",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+addopts = "-v --cov=src --cov-branch --cov-fail-under=90"
+
+[tool.ruff]
+line-length = 100
+src = ["src"]
+
+lint.select = [
+    "F",  # pyflakes rules
+    "E",  # pycodestyle error rules
+    "W",  # pycodestyle warning rules
+    "B",  # flake8-bugbear rules
+    "I",  # isort rules
+    "D",  # pydocstyle rules
+]
+
+lint.pydocstyle.convention = "google"
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["D"]
+
+[tool.ruff.format]
+indent-style = "space"
+docstring-code-format = true
