@@ -1,26 +1,35 @@
 # Releases
 
-Every published GitHub release gets its documentation attached as `docs-<tag>.zip`.
+Every release is created by the workflow `docs-release.yaml` from a pushed tag, with its
+documentation attached as `docs-<tag>.zip`.
+
+The release is published already complete because the repository uses
+[immutable releases](https://docs.github.com/en/code-security/supply-chain-security/understanding-your-software-supply-chain/immutable-releases):
+once published, a release and its assets cannot be changed.
 
 ```mermaid
 sequenceDiagram
     participant You
     participant GitHub
     participant Workflow as docs-release.yaml
-    You->>GitHub: Publish release v0.1.0
-    GitHub->>Workflow: release: published
+    You->>GitHub: Push tag v0.1.0
+    GitHub->>Workflow: push: tags
     Workflow->>Workflow: Checkout v0.1.0, mkdocs build --strict
-    Workflow->>GitHub: Upload docs-v0.1.0.zip to the release
+    Workflow->>GitHub: Create release v0.1.0 with docs-v0.1.0.zip
 ```
 
 ## Create a release
 
+Tag the commit and push the tag. Do not create the release on GitHub yourself: the workflow
+could not attach the documentation to it.
+
 ```bash
-gh release create v0.1.0 --title "v0.1.0" --generate-notes
+git tag v0.1.0
+git push origin v0.1.0
 ```
 
-After a minute, the release page shows `docs-v0.1.0.zip`. Download it, unzip it and open
-`index.html`.
+After a minute, the release page shows `docs-v0.1.0.zip`, with notes generated from the merged
+pull requests. Download it, unzip it and open `index.html`.
 
 ## Links to the source code
 
@@ -34,7 +43,9 @@ to `main`:
 DOCS_REF=v0.1.0 uv run mkdocs build
 ```
 
-## Re-attach the documentation
+## If the workflow failed
 
-If the workflow failed, run **Release documentation** manually from the Actions tab and enter the
-tag. The zip is replaced if it already exists.
+If the tag exists but the release was not created, run **Release** manually from the Actions tab
+and enter the tag.
+
+A release that is already published cannot be fixed: push a new tag, such as `v0.1.1`.

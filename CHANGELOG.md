@@ -17,6 +17,8 @@ All notable changes to this project are documented here. The format is based on
 
 ### Changed
 
+- Releases are created by the workflow from a pushed tag, with the documentation zip, so they
+  work with immutable releases.
 - Ultra Tendency logo and favicon.
 
 ### Fixed

@@ -1,18 +1,20 @@
-name: Release documentation
+name: Release
 
+# Immutable releases cannot get new assets once they are published, so the release is created
+# here, from a pushed tag, together with its documentation zip.
 on:
-  release:
-    types: [published]
+  push:
+    tags: ["**"]
   workflow_dispatch:
     inputs:
       tag:
-        description: "Existing release tag to build and attach the documentation for, e.g. v1.2.0"
+        description: "Existing tag without a release yet, e.g. v1.2.0"
         required: true
         type: string
 
 jobs:
-  docs:
-    name: Build and attach documentation
+  release:
+    name: Build documentation and create the release
 
     runs-on: ubuntu-24.04
 
@@ -20,9 +22,17 @@ jobs:
       contents: write
 
     env:
-      TAG: ${{ github.event.release.tag_name || inputs.tag }}
+      TAG: ${{ inputs.tag || github.ref_name }}
+      GH_TOKEN: ${{ github.token }}
 
     steps:
+      - name: Check that the release does not exist yet
+        run: |
+          if gh release view "${TAG}" --repo "${GITHUB_REPOSITORY}" > /dev/null 2>&1; then
+            echo "::error::Release ${TAG} already exists. Immutable releases cannot be changed, push a new tag instead."
+            exit 1
+          fi
+
       - name: Checkout
         uses: actions/checkout@v7.0.1
         with:
@@ -50,9 +60,7 @@ jobs:
         run: |
           uv run mkdocs build --strict
 
-      - name: Attach documentation to the release
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Create the release with the documentation
         run: |
           (cd site && zip -qr "../docs-${TAG}.zip" .)
-          gh release upload "${TAG}" "docs-${TAG}.zip" --clobber
+          gh release create "${TAG}" "docs-${TAG}.zip" --verify-tag --title "${TAG}" --generate-notes
