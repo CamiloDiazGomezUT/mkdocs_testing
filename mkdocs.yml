@@ -8,8 +8,8 @@ docs_dir: docs
 
 theme:
   name: material
-  logo: assets/ut-logo.png
-  favicon: assets/ut-logo.png
+  logo: assets/ultratendency.png
+  favicon: assets/ultratendency.png
   features:
     - content.action.view
     - content.code.copy
