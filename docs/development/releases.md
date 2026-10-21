@@ -24,8 +24,9 @@ After a minute, the release page shows `docs-v0.1.0.zip`. Download it, unzip it 
 
 ## Links to the source code
 
-Links from the docs to source files (for example [population.py](../src/citystats/population.py)) point at the
-release tag, so they show the code as it was in that release. The hook
+Links from the docs to source files (for example [population.py](../../src/citystats/population.py))
+and the "view source" button of each page point at the release tag, so they show the files as
+they were in that release. The tag is also shown next to the site name. The hook
 `docs/scripts/repo_links.py` reads the tag from the `DOCS_REF` environment variable and falls back
 to `main`:
 

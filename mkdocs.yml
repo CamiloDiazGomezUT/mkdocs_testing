@@ -2,22 +2,26 @@ site_name: citystats
 site_description: Sandbox to test MkDocs documentation attached to GitHub releases.
 repo_url: https://github.com/CamiloDiazGomezUT/mkdocs_testing
 repo_name: mkdocs_testing
-edit_uri: edit/main/docs/
+# Overridden by docs/scripts/repo_links.py to point at the release tag
+edit_uri: blob/main/docs/
 docs_dir: docs
 
 theme:
   name: material
-  logo: assets/powerco-logo.png
-  favicon: assets/favicon.png
+  logo: assets/ut-logo.png
+  favicon: assets/ut-logo.png
   features:
+    - content.action.view
     - content.code.copy
     - navigation.footer
     - navigation.indexes
+    - navigation.path
     - navigation.sections
     - navigation.tabs
     - navigation.top
     - search.highlight
     - search.suggest
+    - toc.follow
   # The first entry follows the operating system; the toggle cycles auto -> light -> dark
   palette:
     - media: "(prefers-color-scheme)"
@@ -42,17 +46,26 @@ theme:
         name: Switch to system preference
 
 extra_css:
-  - stylesheets/powerco.css
+  - stylesheets/ultratendency.css
 
 markdown_extensions:
+  - abbr
   - admonition
   - attr_list
+  - def_list
+  - md_in_html
   - tables
   - toc:
       permalink: true
   - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.highlight
+  - pymdownx.inlinehilite
   - pymdownx.snippets:
+      auto_append:
+        - docs/includes/glossary.md
       check_paths: true
   - pymdownx.superfences:
       custom_fences:
@@ -65,7 +78,11 @@ hooks:
 
 plugins:
   - search
-  # The release zip is opened from disk (file://): link to page.html files and bundle search
+  # The release zip is opened from disk (file://), maybe without internet: download external
+  # assets such as Mermaid and the fonts into the site
+  - privacy:
+      enabled: !ENV [OFFLINE, false]
+  # Link to page.html files and bundle search
   - offline:
       enabled: !ENV [OFFLINE, false]
   - gen-files:
@@ -73,7 +90,6 @@ plugins:
         - docs/scripts/gen_ref_pages.py
   - literate-nav:
       nav_file: SUMMARY.md
-  - section-index
   - mkdocstrings:
       handlers:
         python:
@@ -88,11 +104,25 @@ plugins:
             show_symbol_type_heading: true
             show_symbol_type_toc: true
 
+validation:
+  links:
+    not_found: warn
+    anchors: warn
+
 exclude_docs: |
+  includes/
   scripts/
 
 nav:
   - Home: index.md
-  - Usage: usage.md
-  - Releases: releases.md
+  - Getting started: getting-started.md
+  - Guides:
+      - guides/population.md
+      - guides/weather.md
+  - Explanation:
+      - explanation/architecture.md
   - API Reference: reference/
+  - Development:
+      - development/contributing.md
+      - development/releases.md
+  - Changelog: changelog.md
