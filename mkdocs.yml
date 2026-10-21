@@ -7,25 +7,42 @@ docs_dir: docs
 
 theme:
   name: material
+  logo: assets/powerco-logo.png
+  favicon: assets/favicon.png
   features:
     - content.code.copy
+    - navigation.footer
     - navigation.indexes
     - navigation.sections
     - navigation.tabs
     - navigation.top
     - search.highlight
     - search.suggest
+  # The first entry follows the operating system; the toggle cycles auto -> light -> dark
   palette:
+    - media: "(prefers-color-scheme)"
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
     - media: "(prefers-color-scheme: light)"
       scheme: default
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
+      primary: custom
+      accent: custom
       toggle:
         icon: material/brightness-4
-        name: Switch to light mode
+        name: Switch to system preference
+
+extra_css:
+  - stylesheets/powerco.css
 
 markdown_extensions:
   - admonition

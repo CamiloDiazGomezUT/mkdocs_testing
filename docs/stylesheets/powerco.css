@@ -1,0 +1,28 @@
+/* PowerCo colours, from the "PowerCo-Color" theme of the official slide template */
+
+:root {
+  --powerco-black: #212124;
+  --powerco-green: #00be8c;
+  --powerco-blue: #326afa;
+  --powerco-light-blue: #98b4fd;
+}
+
+[data-md-color-primary="custom"] {
+  --md-primary-fg-color: var(--powerco-black);
+  --md-primary-fg-color--light: #373739;
+  --md-primary-fg-color--dark: #000000;
+}
+
+[data-md-color-accent="custom"] {
+  --md-accent-fg-color: var(--powerco-green);
+  --md-accent-fg-color--transparent: rgb(0 190 140 / 10%);
+}
+
+/* The primary colour is almost black, so links use the PowerCo blue instead */
+[data-md-color-scheme="default"] {
+  --md-typeset-a-color: var(--powerco-blue);
+}
+
+[data-md-color-scheme="slate"] {
+  --md-typeset-a-color: var(--powerco-light-blue);
+}
